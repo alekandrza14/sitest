@@ -2,7 +2,7 @@ window.MYENGINE_CONFIG = Object.freeze({
   "format": 2,
   "gameName": "MyGame",
   "sellerName": "Unauticna",
-  "productId": "delux",
+  "productId": "deluxe",
   "productTitle": "\u043a\u0443\u0431 \u043f\u0435\u0440\u0432\u044b\u0439",
   "description": "\u0414\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435 \u043a \u0438\u0433\u0440\u0435.",
   "amount": "10.00",
@@ -19,11 +19,11 @@ window.MYENGINE_CONFIG = Object.freeze({
   "products": [
     {
       "productTitle": "\u043a\u0443\u0431 \u043f\u0435\u0440\u0432\u044b\u0439",
-      "productId": "delux",
+      "productId": "deluxe",
       "description": "\u0414\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435 \u043a \u0438\u0433\u0440\u0435.",
       "activationText": "\u0410\u043a\u0442\u0438\u0432\u0430\u0446\u0438\u044f \u0432\u0440\u0443\u0447\u043d\u0443\u044e \u043f\u043e\u0441\u043b\u0435 \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0438 \u043f\u0435\u0440\u0435\u0432\u043e\u0434\u0430. \u041f\u0435\u0440\u0435\u0434\u0430\u0439 \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0435 ID \u0438\u0433\u0440\u043e\u043a\u0430 \u0438 \u043d\u043e\u043c\u0435\u0440 \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u0438 \u042eMoney.",
       "amount": "10.00",
-      "paymentCode": "11aa476e90"
+      "paymentCode": "2d5cc34c33"
     },
     {
       "productTitle": "\u043a\u0443\u0431 \u0432\u0442\u043e\u0440\u043e\u0439",
