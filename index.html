@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111214">
+  <meta name="description" content="MyGame · testdonation — 10 ₽. Страница оплаты через ЮMoney.">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>MyGame · testdonation — 10 ₽</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./config.js" defer></script>
+  <script src="./app.js" defer></script>
+  <script src="./developer-core.js" defer></script>
+  <script src="./developer.js" defer></script>
+</head>
+<body>
+  <div class="preview-banner" id="preview-banner">Предпросмотр · Приём платежей пока не подключён</div>
+  <header class="site-header wrap">
+    <a class="brand" href="./" aria-label="MyGame — главная"><span class="brand-icon" aria-hidden="true"><span aria-hidden="true">✦</span></span><span>MyGame<small>Unauticna</small></span></a>
+    <nav aria-label="Основная навигация"><a href="#how">Как это работает</a><a href="#faq">Вопросы</a><a class="nav-cta" href="#checkout">testdonation <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main>
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="tiny-square"></span> MyGame / testdonation</p>
+        <h1 id="hero-title">MyGame.<br><span>testdonation.</span></h1>
+        <p class="intro">Дополнение к игре.<br>Укажи свой ID и перейди к оплате через ЮMoney.</p>
+        <div class="edition-pass" aria-label="Карточка версии MyGame · testdonation">
+          <div class="pass-head"><span>MyGame</span><span>deluxe</span></div>
+          <div class="pass-content"><span class="pass-monogram" aria-hidden="true"><span aria-hidden="true">✦</span></span><div class="pass-title">testdonation<span>ДЛЯ ТВОЕГО MyGame</span></div></div>
+          <div class="pass-bottom"><span class="bar-code" aria-hidden="true"></span><span>testdonation</span><span class="pass-star" aria-hidden="true">✳</span></div>
+        </div>
+        <p class="visual-caption"><span>01 / testdonation</span><span>Маленькая цена. Твой выбор.</span></p>
+      </div>
+      <aside class="checkout" id="checkout" aria-labelledby="checkout-title">
+        <div class="checkout-top"><p class="eyebrow dark">ВЕРСИЯ ДЛЯ ТЕБЯ</p><span class="edition-tag">testdonation</span></div>
+        <h2 id="checkout-title">MyGame · testdonation</h2>
+        <div class="price">10 <span>₽</span><small>разовый платёж</small></div>
+        <div class="divider"></div>
+        <form id="payment-form" method="post" action="https://yoomoney.ru/quickpay/confirm" accept-charset="UTF-8">
+          <input type="hidden" name="receiver" id="receiver" value="">
+          <input type="hidden" name="quickpay-form" value="button">
+          <input type="hidden" name="sum" id="sum" value="10.00">
+          <input type="hidden" name="label" id="payment-label" value="">
+          <input type="hidden" name="successURL" id="success-url" value="">
+          <label class="field-label" for="player-id">Твой ID в MyGame</label>
+          <input class="player-input" id="player-id" type="text" placeholder="Например, player_01" autocomplete="off" autocapitalize="none" spellcheck="false" required minlength="1" maxlength="32" pattern="[A-Za-z0-9_.\-]{1,32}" aria-describedby="id-hint">
+          <p class="input-hint" id="id-hint">ID или логин: латинские буквы, цифры, точка, _ и -.</p>
+          <fieldset class="methods"><legend>Способ оплаты</legend><div class="method-grid">
+            <label class="method"><input type="radio" name="paymentType" value="PC" checked><span><b class="method-symbol">Ю</b><strong>ЮMoney</strong><small>Из кошелька</small></span></label>
+            <label class="method"><input type="radio" name="paymentType" value="AC"><span><b class="method-symbol card-symbol" aria-hidden="true">▰</b><strong>Картой</strong><small>Через ЮMoney</small></span></label>
+          </div></fieldset>
+          <label class="consent"><input type="checkbox" id="consent" required><span>Мой ID указан верно. Я ознакомился с <a href="#activation">порядком активации</a>.</span></label>
+          <button class="pay-button" id="pay-button" type="submit" disabled><span id="pay-button-label">Оплата скоро появится</span><span aria-hidden="true">↗</span></button>
+          <p class="form-message" id="form-message" role="status" aria-live="polite">Приём платежей пока не подключён.</p>
+          <p class="secure-note"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Платёжные данные вводятся на сайте ЮMoney</p>
+        </form>
+        <details class="developer-block" id="developer-access" hidden>
+          <summary>Я разработчик <span aria-hidden="true">+</span></summary>
+          <p class="developer-intro">Получить сертификат testdonation без списания. Введи данные, заданные при настройке режима разработчика.</p>
+          <form id="developer-form" autocomplete="off">
+            <label class="field-label" for="developer-player">ID разработчика</label>
+            <input class="player-input" id="developer-player" type="text" required maxlength="32" pattern="[A-Za-z0-9_.\-]{1,32}" autocomplete="off" spellcheck="false" autocapitalize="none">
+            <label class="field-label" for="developer-last4">Последние 4 цифры карты</label>
+            <input class="player-input" id="developer-last4" type="password" required minlength="4" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" autocomplete="off" aria-describedby="developer-hint">
+            <label class="field-label" for="developer-phone">Телефон с кодом страны</label>
+            <input class="player-input" id="developer-phone" type="tel" required maxlength="25" autocomplete="off" placeholder="+7… или +371…" aria-describedby="developer-hint">
+            <p class="input-hint" id="developer-hint">Данные сверяются только в браузере. Полный номер карты, срок действия и CVC не нужны. Подтверждение через банк или SMS не выполняется.</p>
+            <button class="pay-button" id="developer-issue" type="submit">Получить сертификат <span aria-hidden="true">↓</span></button>
+            <p class="form-message" id="developer-message" role="status" aria-live="polite"></p>
+          </form>
+          <section class="developer-certificate" id="developer-result" hidden tabindex="-1" aria-labelledby="certificate-title">
+            <p class="eyebrow dark">СЕРТИФИКАТ РАЗРАБОТЧИКА</p>
+            <h3 id="certificate-title">MyGame · testdonation</h3>
+            <p class="certificate-status">Оплата не требуется · 0 ₽</p>
+            <dl><dt>ID игрока</dt><dd id="certificate-player"></dd><dt>Номер сертификата</dt><dd id="certificate-id"></dd><dt>Создан</dt><dd id="certificate-date"></dd></dl>
+            <p class="input-hint">Бесплатная выдача разработчику. Банковская операция не выполнялась.</p>
+            <button type="button" class="pay-button" id="developer-download">Скачать сертификат JSON <span aria-hidden="true">↓</span></button>
+          </section>
+        </details>
+        <noscript><p class="noscript">Для оплаты включите JavaScript. Пока он отключён, платёж недоступен.</p></noscript>
+      </aside>
+    </section>
+    <section class="return-panel wrap" id="return-panel" hidden aria-labelledby="return-title" tabindex="-1">
+      <span class="return-icon" aria-hidden="true">↩</span><div><p class="eyebrow">ВОЗВРАЩЕНИЕ С ЮMONEY</p><h2 id="return-title">Проверь статус перевода</h2><p>Возврат на сайт не подтверждает оплату. Проверь операцию в ЮMoney. Если перевод завершён, свяжись с поддержкой для активации testdonation.</p><p id="return-order" class="order-code"></p><a class="text-link support-link" hidden>Связаться с поддержкой ↗</a></div>
+    </section>
+    <section class="how wrap" id="how" aria-labelledby="how-title">
+      <div class="section-heading"><p class="eyebrow">ПРОСТОЙ ПОРЯДОК</p><h2 id="how-title">От ID до testdonation.</h2></div>
+      <div class="steps">
+        <article><span class="step-number">01</span><h3>Укажи свой ID</h3><p>Он попадёт в метку перевода, чтобы можно было связать оплату с твоим аккаунтом.</p></article>
+        <article><span class="step-number">02</span><h3>Переведи 10 ₽</h3><p>Выбери кошелёк или карту. Проверь получателя и итоговую сумму на странице ЮMoney.</p></article>
+        <article id="activation"><span class="step-number">03</span><h3>Активируй testdonation</h3><p id="activation-text">testdonation активируется вручную после проверки перевода. Передай поддержке ID игрока и номер операции из ЮMoney.</p><a class="text-link support-link" hidden>Написать поддержке ↗</a><p id="support-placeholder" class="muted">Контакт поддержки появится перед запуском оплаты.</p></article>
+      </div>
+    </section>
+    <section class="faq wrap" id="faq" aria-labelledby="faq-title">
+      <div class="section-heading"><p class="eyebrow">ЕСТЬ ВОПРОС?</p><h2 id="faq-title">Перед оплатой.</h2></div>
+      <div class="faq-items">
+        <details><summary>Это подписка?<span aria-hidden="true">+</span></summary><p>Нет. Эта форма предназначена для одного перевода на 10 ₽. Автоматическое повторное списание не подключается.</p></details>
+        <details><summary>Когда появится testdonation?<span aria-hidden="true">+</span></summary><p>После проверки поступления перевода и ручной активации разработчиком. Срок и условия уточни у поддержки перед оплатой. Возврат со страницы ЮMoney сам по себе не активирует testdonation.</p></details>
+        <details><summary>Где вводить данные карты?<span aria-hidden="true">+</span></summary><p>Для оплаты — только на странице ЮMoney. Отдельный режим разработчика сверяет последние 4 цифры и телефон локально. Полный номер карты, CVC и пароль от кошелька этот сайт не запрашивает.</p></details>
+        <details><summary>Что делать, если ошибся в ID?<span aria-hidden="true">+</span></summary><p>Если ещё не оплатил — исправь ID в форме. Если перевод уже завершён — отправь поддержке верный ID и номер операции из истории ЮMoney. Не оплачивай повторно до выяснения статуса.</p></details>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer wrap"><a class="footer-brand" href="./">MyGame<span>Unauticna</span></a><p>testdonation edition · 10 ₽</p><a href="https://yoomoney.ru/" target="_blank" rel="noopener noreferrer">Оплата через ЮMoney ↗</a></footer>
+</body>
+</html>

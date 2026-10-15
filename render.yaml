@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: myengine-payment-site
+    runtime: static
+    buildCommand: node scripts/build-static.mjs
+    staticPublishPath: ./dist
+    autoDeployTrigger: commit
+    envVars:
+      - key: SKIP_INSTALL_DEPS
+        value: "true"

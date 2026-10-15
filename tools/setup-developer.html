@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Настройка доступа разработчика — MyEngine</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <script src="../config.js" defer></script>
+  <script src="../developer-core.js" defer></script>
+  <script src="./setup-developer.js" defer></script>
+</head>
+<body>
+  <main class="setup-layout">
+    <p class="eyebrow">MYENGINE / ЛОКАЛЬНАЯ НАСТРОЙКА</p>
+    <h1>Доступ<br><span>разработчика.</span></h1>
+    <p class="intro">Укажи свой ID, последние 4 цифры карты и телефон. Мастер создаст новый config.js для твоего сайта. Всё вычисляется в этом браузере.</p>
+    <section class="checkout" aria-labelledby="setup-title">
+      <h2 id="setup-title">Настройка совпадения</h2>
+      <p class="input-hint">Это простая локальная проверка без SMS и подтверждения банка. Хеш в публичном config.js не делает её защищённой от обхода.</p>
+      <form id="setup-form" autocomplete="off">
+        <label class="field-label" for="setup-player">Твой ID разработчика в MyEngine</label>
+        <input class="player-input" id="setup-player" type="text" required maxlength="32" pattern="[A-Za-z0-9_.\-]{1,32}" autocomplete="off" spellcheck="false" autocapitalize="none" placeholder="Например, alekandrza14">
+        <label class="field-label" for="setup-last4">Последние 4 цифры карты</label>
+        <input class="player-input" id="setup-last4" type="password" required minlength="4" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" autocomplete="off">
+        <label class="field-label" for="setup-phone">Телефон с кодом страны</label>
+        <input class="player-input" id="setup-phone" type="tel" required maxlength="25" autocomplete="off" placeholder="+7… или +371…">
+        <p class="input-hint">Полный номер карты и CVC не вводи. Телефон и последние 4 цифры не сохраняются в создаваемом файле и не отправляются на сервер.</p>
+        <button class="pay-button" type="submit" id="setup-generate" disabled>Создать настройки <span aria-hidden="true">↗</span></button>
+        <p class="form-message" id="setup-message" role="status" aria-live="polite">Загружаем локальные скрипты…</p>
+      </form>
+      <section class="setup-result" id="setup-result" hidden>
+        <h3>Настройки готовы</h3>
+        <p id="setup-summary"></p>
+        <button class="pay-button" id="setup-download" type="button">Скачать config.js <span aria-hidden="true">↓</span></button>
+        <ol><li>Замени config.js в корне сайта скачанным файлом.</li><li>Также загрузи обновлённые index.html, styles.css, developer-core.js и developer.js из архива.</li><li>Открой сайт, раскрой «Я разработчик» и введи те же данные.</li><li>Скачай сертификат Deluxe в JSON.</li></ol>
+        <p>Папку tools публиковать не требуется. Сохрани её у себя для изменения настроек.</p>
+      </section>
+      <noscript><p>Для локального мастера нужно включить JavaScript.</p></noscript>
+    </section>
+    <p class="setup-footer">Изменения применятся к сайту после загрузки файлов. Реального списания или проверки карты этот мастер не выполняет.</p>
+  </main>
+</body>
+</html>
