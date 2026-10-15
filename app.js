@@ -8,13 +8,46 @@
   const message = document.getElementById("form-message");
   const playerInput = document.getElementById("player-id");
   const receiver = typeof config.receiver === "string" ? config.receiver.trim() : "";
-  const amount = typeof config.amount === "string" ? config.amount : "";
-  const amountValid = /^(?:0|[1-9]\d{0,6})\.\d{2}$/.test(amount) && Number(amount) > 0 && Number(amount) <= 1000000;
-  const displayAmount = Number(amount).toLocaleString("ru-RU", { maximumFractionDigits: 2 });
-  const product = typeof config.productId === "string" ? config.productId : "";
-  const productValid = /^[A-Za-z0-9_.-]{1,100}$/.test(product);
   const params = new URL(window.location.href).searchParams;
-  const productMatches = !params.has("product") || params.get("product") === product;
+  const multi = Object.prototype.hasOwnProperty.call(config, "products");
+  const items = multi ? config.products : [config];
+  const validAmount = value => typeof value === "string" && /^(?:0|[1-9]\d{0,6})\.\d{2}$/.test(value) && Number(value) > 0 && Number(value) <= 1000000;
+  const validProduct = item => item && typeof item === "object" && typeof item.productId === "string" &&
+    /^[A-Za-z0-9_.-]{1,100}$/.test(item.productId) && validAmount(item.amount) &&
+    (!multi || (typeof item.productTitle === "string" && item.productTitle.trim() &&
+      typeof item.activationText === "string" && item.activationText.trim() && /^[a-f0-9]{10}$/.test(item.paymentCode)));
+  const catalogValid = Array.isArray(items) && items.length > 0 && items.length <= 100 && items.every(validProduct) &&
+    new Set(items.map(item => item.productId)).size === items.length &&
+    (!multi || new Set(items.map(item => item.paymentCode)).size === items.length);
+  const selected = catalogValid ? (params.has("product") ? items.find(item => item.productId === params.get("product")) : items[0]) : null;
+  const product = selected?.productId || "";
+  const amount = selected?.amount || "";
+  const amountValid = validAmount(amount);
+  const displayAmount = amountValid ? Number(amount).toLocaleString("ru-RU", { maximumFractionDigits: 2 }) : "—";
+  const productValid = !!selected;
+  const productMatches = !!selected;
+  // Shared immutable selection: the developer certificate must use this same product.
+  window.MyEngineStore = Object.freeze({ selected: selected ? Object.freeze({ ...selected, gameName: config.gameName }) : null });
+  const display = { title: selected?.productTitle || (selected ? product : "Товар не найден"),
+    price: displayAmount, description: selected?.description || (selected ? "" : "Выберите товар из каталога выше."), id: product || "—" };
+  document.querySelectorAll("[data-product-field]").forEach(node => {
+    if (Object.prototype.hasOwnProperty.call(display, node.dataset.productField)) node.textContent = display[node.dataset.productField];
+  });
+  document.title = `${config.gameName || "Магазин"} · ${display.title}`;
+  document.querySelectorAll("[data-catalog-product]").forEach(link => {
+    if (link.dataset.catalogProduct === product) link.setAttribute("aria-current", "true");
+    // Each link starts a different purchase; never carry another product's requestId or return flag.
+    const target = new URL(window.location.href);
+    target.search = ""; target.hash = "checkout";
+    target.searchParams.set("product", link.dataset.catalogProduct);
+    link.href = target.href;
+    link.addEventListener("click", () => {
+      const player = playerInput.value.trim();
+      if (/^[A-Za-z0-9_.-]{1,32}$/.test(player)) target.searchParams.set("playerId", player);
+      else target.searchParams.delete("playerId");
+      link.href = target.href;
+    });
+  });
   const storageKey = "myengine.payment.pending.v2." + receiver + "." + product;
   const idPattern = /^[A-Za-z0-9_.-]{1,32}$/;
   let submitting = false;
@@ -34,7 +67,7 @@
     try {
       const item = JSON.parse(sessionStorage.getItem(storageKey));
       if (item && item.product === product && typeof item.player === "string" && idPattern.test(item.player) &&
-          typeof item.label === "string" && /^(?:DLX-[A-Za-z0-9_.-]{1,59}|ME-[a-f0-9]{32})$/.test(item.label) &&
+          typeof item.label === "string" && /^(?:DLX-[A-Za-z0-9_.-]{1,59}|ME-(?:[a-f0-9]{10}-)?[a-f0-9]{32}|MP-[a-f0-9]{10}-[A-Za-z0-9_.-]{1,32}-[a-f0-9]{12})$/.test(item.label) &&
           item.label.length <= 64 && Number.isFinite(item.createdAt) &&
           item.createdAt <= Date.now() && Date.now() - item.createdAt < 7 * 86400000) return item;
     } catch (_) { /* Оплата работает и при недоступном хранилище браузера. */ }
@@ -42,7 +75,7 @@
   }
 
   const support = supportAddress(config.supportUrl);
-  const activation = typeof config.activationText === "string" ? config.activationText.trim() : "";
+  const activation = typeof selected?.activationText === "string" ? selected.activationText.trim() : "";
   const configured = config.paymentsEnabled === true && amountValid && productValid && /^4100\d{7,16}$/.test(receiver) && !!support && !!activation;
   const published = window.location.protocol === "https:";
   const ready = configured && published && productMatches;
@@ -61,7 +94,7 @@
     submitting = false;
     button.disabled = !ready;
     buttonLabel.textContent = ready ? `Оплатить ${displayAmount} ₽` : "Оплата скоро появится";
-    message.textContent = !productMatches ? "Товар по ссылке не совпадает с настройками сайта. Обратитесь к разработчику." : ready ? "" : configured && !published
+    message.textContent = !productMatches ? "Товар по ссылке не совпадает с каталогом сайта. Выберите товар из каталога или обратитесь к разработчику." : ready ? "" : configured && !published
       ? "Предпросмотр: оплата доступна после публикации сайта по HTTPS."
       : "Приём платежей пока не подключён.";
   }
@@ -86,11 +119,13 @@
     }
 
     try {
-      const random = new Uint32Array(1);
+      const random = new Uint32Array(2);
       window.crypto.getRandomValues(random);
-      const requestId = params.get("requestId");
-      const label = /^[a-f0-9]{32}$/.test(requestId || "")
-        ? `ME-${requestId}` : `DLX-${player}-${Date.now().toString(36)}-${random[0].toString(16).padStart(8, "0")}`;
+      const requestId = params.get("product") === product ? params.get("requestId") : null;
+      const suffix = Array.from(random, n => n.toString(16).padStart(8, "0")).join("").slice(0, 12);
+      const label = multi
+        ? (/^[a-f0-9]{32}$/.test(requestId || "") ? `ME-${selected.paymentCode}-${requestId}` : `MP-${selected.paymentCode}-${player}-${suffix}`)
+        : (/^[a-f0-9]{32}$/.test(requestId || "") ? `ME-${requestId}` : `DLX-${player}-${Date.now().toString(36)}-${random[0].toString(16).padStart(8, "0")}`);
       if (label.length > 64) throw new Error("label length");
       const returnUrl = new URL(window.location.href);
       returnUrl.search = "";

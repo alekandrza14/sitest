@@ -3,8 +3,9 @@
   "use strict";
   const api = window.MyEngineDeveloper;
   const settings = window.MYENGINE_CONFIG?.developerAccess;
+  const product = window.MyEngineStore?.selected;
   const block = document.getElementById("developer-access");
-  if (!api || !api.isConfigured(settings)) return;
+  if (!api || !product || !api.isConfigured(settings)) return;
   block.hidden = false;
   const form = document.getElementById("developer-form");
   const button = document.getElementById("developer-issue");
@@ -33,7 +34,7 @@
     button.disabled = true;
     status.textContent = "Проверяем совпадение…";
     try {
-      const next = await api.issue(settings, entered.id, entered.last4, entered.phone, window.MYENGINE_CONFIG);
+      const next = await api.issue(settings, entered.id, entered.last4, entered.phone, product);
       // Не показываем результат старой проверки, если данные поменяли во время SHA-256.
       if (id.value.trim() !== entered.id || card.value.trim() !== entered.last4 || phone.value !== entered.phone) {
         status.textContent = "Данные изменились. Нажмите кнопку ещё раз.";
